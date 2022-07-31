@@ -48,7 +48,7 @@ private slots:
 
     void on_dian_start_pressed();
 
-    int on_dian_start_released();
+    void on_dian_start_released();
 
     void on_pushButton_clicked();
 
@@ -94,4 +94,8 @@ extern int err50;
 extern int err100;
 extern int err150;
 extern double d_Vel;
+extern QMap<QString,int> map_write;
+extern int state;
+extern QList<int> vellist;
+extern QList<int> vellist2;
 #endif // FORM_H

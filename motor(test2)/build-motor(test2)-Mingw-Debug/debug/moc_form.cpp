@@ -122,7 +122,7 @@ static const uint qt_meta_data_form[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Int,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::QString,   13,
     QMetaType::Void, QMetaType::QString,   13,
@@ -156,8 +156,7 @@ void form::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void *
         case 5: _t->on_x_start_clicked(); break;
         case 6: _t->on_j_start_clicked(); break;
         case 7: _t->on_dian_start_pressed(); break;
-        case 8: { int _r = _t->on_dian_start_released();
-            if (_a[0]) *reinterpret_cast< int*>(_a[0]) = _r; }  break;
+        case 8: _t->on_dian_start_released(); break;
         case 9: _t->on_pushButton_clicked(); break;
         case 10: _t->on_dian_Vel_textEdited((*reinterpret_cast< const QString(*)>(_a[1]))); break;
         case 11: _t->on_dian_Acc_textEdited((*reinterpret_cast< const QString(*)>(_a[1]))); break;

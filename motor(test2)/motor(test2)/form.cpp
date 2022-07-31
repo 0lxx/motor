@@ -38,7 +38,7 @@ form::~form()
 }
 
 int Model[100],i;
-
+int state;
 double d_Vel;
 int i_TestVel;
 int result_xnet;
@@ -48,6 +48,9 @@ bool set_power;
 int err50;
 int err100;
 int err150;
+QList<int> vellist;
+QList<int> vellist2;
+QMap<QString,int> map_write;
 
 
 //建立通信
@@ -99,15 +102,19 @@ bool form::on_set_XNet_triggered()
         switch (num_State) {
         case 0:
             ui->lineEdit->setText("轴未使能");
+            state = 0;
             break;
         case 1:
             ui->lineEdit->setText("轴使能、未运动");
+            state = 1;
             break;
         case 2:
             ui->lineEdit->setText("轴运动中");
+            state = 2;
             break;
         case 3:
             ui->lineEdit->setText("轴持续运动中");
+            state = 3;
             break;
         case 4:
             ui->lineEdit->setText("轴同步运动中");
@@ -184,6 +191,19 @@ bool form::on_set_XNet_triggered()
         double j_Move =jMove.toDouble();
         Write_Double(XNet_HD,150,4,j_Move);//绝对模式下写入目标位置
 
+
+        map_write.insert("d_Vel",d_Vel);
+        map_write.insert("d_Acc",d_Acc);
+        map_write.insert("d_Dec",d_Dec);
+        map_write.insert("x_Vel",x_Vel);
+        map_write.insert("x_Acc",x_Acc);
+        map_write.insert("x_Dec",x_Dec);
+        map_write.insert("x_Move",x_Move);
+        map_write.insert("j_Vel",j_Vel);
+        map_write.insert("j_Acc",j_Acc);
+        map_write.insert("j_Dec",j_Dec);
+        map_write.insert("j_Move",j_Move);
+
     });
     timer_Enter->start(1000);
 
@@ -220,37 +240,102 @@ void form::on_powerStopButton_clicked()
 //点动运行按下
 void form::on_dian_start_pressed()
 {
-    dian(true);
+    //dian(true);
 
+    Write_Bool(XNet_M,1,1,true);
+
+
+    vellist.prepend(0);
     QTimer *timer_Vel = new QTimer;
     connect(timer_Vel,&QTimer::timeout,[=](){
 
-        qDebug() << 1;
-
+        i_TestVel++;
+        qDebug() << i_TestVel;
+        double vel;
+        Read_Double(XNet_D,20048,4,&vel);
+        if(qAbs(vel-map_write["d_Vel"])<10)
+        {
+            timer_Vel->stop();
+            qDebug() << vel <<"=" <<map_write["d_Vel"];
+            vellist.prepend(i_TestVel);
+            i_TestVel=0;
+        }
     });
-    timer_Vel->start(1000);
-
-
+    timer_Vel->start(100);
     Write_Bool(XNet_M,3,1,false);
-
 }
 
 int form::dian(bool data)
 {
 
     Write_Bool(XNet_M,1,1,data);//将点动模式运行置true
+    if(data==true)
+    {
+        vellist.prepend(0);
+        QTimer *timer_Vel = new QTimer;
+        connect(timer_Vel,&QTimer::timeout,[=](){
+
+            i_TestVel++;
+            qDebug() << i_TestVel;
+            double vel;
+            Read_Double(XNet_D,20048,4,&vel);
+            if(qAbs(vel-map_write["d_Vel"])<10)
+            {
+                timer_Vel->stop();
+                qDebug() << vel <<"=" <<map_write["d_Vel"];
+                vellist.prepend(i_TestVel);
+                i_TestVel=0;
+            }
+        });
+        timer_Vel->start(100);
+    }
+    else
+    {
+        vellist2.prepend(0);
+        QTimer *timer_Vel = new QTimer;
+        connect(timer_Vel,&QTimer::timeout,[=](){
+
+            i_TestVel++;
+            qDebug() << i_TestVel;
+            double vel;
+            Read_Double(XNet_D,20048,4,&vel);
+            if(qAbs(vel)<10)
+            {
+                timer_Vel->stop();
+                qDebug() << "vel=" <<0;
+                vellist2.prepend(i_TestVel);
+                i_TestVel=0;
+            }
+        });
+        timer_Vel->start(100);
+    }
     Write_Bool(XNet_M,3,1,!data);
-
-
-
     Read_Int(XNet_D,50,2,&err50);
     return err50;
 
 }
 //点动按钮释放
-int form::on_dian_start_released()
+void form::on_dian_start_released()
 {
-    dian(false);
+    Write_Bool(XNet_M,3,1,true);
+    Write_Bool(XNet_M,1,1,false);
+    vellist2.prepend(0);
+    QTimer *timer_Vel = new QTimer;
+    connect(timer_Vel,&QTimer::timeout,[=](){
+
+        i_TestVel++;
+        qDebug() << i_TestVel;
+        double vel;
+        Read_Double(XNet_D,20048,4,&vel);
+        if(qAbs(vel)<10)
+        {
+            timer_Vel->stop();
+            qDebug() << "vel=" <<0;
+            vellist2.prepend(i_TestVel);
+            i_TestVel=0;
+        }
+    });
+    timer_Vel->start(100);
 
 
 }
