@@ -24,6 +24,7 @@ public:
     int dian(bool data);
     int x_start(bool data);
     int j_start(bool data);
+    double home(bool data);
 
     void closeEvent(QCloseEvent *);
     bool ReadBusy(int);

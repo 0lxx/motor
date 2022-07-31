@@ -234,6 +234,7 @@ void form::on_dian_start_pressed()
     Write_Bool(XNet_M,3,1,false);
 
 }
+
 int form::dian(bool data)
 {
 
@@ -371,8 +372,7 @@ void form::on_quitButton_clicked()
 //将当前位置清零
 void form::on_pushButton_clicked()
 {
-    Write_Bool(XNet_M,40,1,true);
-
+    home(true);
     bool m160;
     Read_Bool(XNet_M,160,1,&m160);
     if(m160)
@@ -380,7 +380,13 @@ void form::on_pushButton_clicked()
         Write_Bool(XNet_M,40,1,false);
     }
 }
-
+double form::home(bool data)
+{
+    Write_Bool(XNet_M,40,1,data);
+    double home;
+    Read_Double(XNet_D,20044,4,&home);
+    return home;
+}
 //设置速度、加速度、减速度最大范围
 //点动
 void form::on_dian_Vel_textEdited(const QString &arg1)//速度

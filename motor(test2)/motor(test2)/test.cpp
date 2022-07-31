@@ -23,7 +23,18 @@ TEST(power,power_Test)
     qDebug() <<"power="<<1;
 
 }
-
+//原点
+TEST(home,home_Test)
+{
+    form a;
+    EXPECT_EQ(0,a.home(true));
+    bool m160;
+    Read_Bool(XNet_M,160,1,&m160);
+    if(m160)
+    {
+        Write_Bool(XNet_M,40,1,false);
+    }
+}
 //点动
 class dian : public::testing::TestWithParam<int>
 {
@@ -55,7 +66,7 @@ class xdui : public::testing::TestWithParam<int>
 TEST_P(xdui,xdui_Test)
 {
     int xvel =  GetParam();
-    int xmove = xvel*10;
+    int xmove = xvel*5;
     form a;
 
 

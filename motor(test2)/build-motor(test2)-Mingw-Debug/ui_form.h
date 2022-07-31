@@ -808,7 +808,7 @@ public:
 
         retranslateUi(form);
 
-        set_Widget->setCurrentIndex(1);
+        set_Widget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(form);
