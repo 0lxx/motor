@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/new">
+        <file>pictures/201903141624081643.jpg</file>
+        <file>pictures/201912251340553532.jpg</file>
+        <file>pictures/背景.png</file>
+        <file>pictures/伺服.png</file>
+        <file>pictures/电机测试.png</file>
+        <file>pictures/电机控制系统.png</file>
+        <file>pictures/电源.png</file>
+        <file>pictures/黑色背景.png</file>
+        <file>pictures/灰色背景.png</file>
+        <file>pictures/控制电机模块.png</file>
+        <file>pictures/屏幕截图 2022-07-15 101604.png</file>
+        <file>pictures/通信模块.png</file>
+        <file>pictures/运动参数设置.png</file>
+        <file>pictures/motor.png</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,13 @@
+<?xml version ="1.0" encoding ="utf-8"?>
+<Tests>
+<Test0>
+<x_Vel>100</x_Vel>
+<x_Acc>100</x_Acc>
+<x_Dec>100</x_Dec>
+<x_Move>500</x_Move>
+<j_Vel>100</j_Vel>
+<j_Acc>100</j_Acc>
+<j_Dec>100</j_Dec>
+<j_Move>1000</j_Move>
+</Test0>	
+</Tests>
