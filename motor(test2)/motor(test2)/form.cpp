@@ -269,46 +269,6 @@ int form::dian(bool data)
 {
 
     Write_Bool(XNet_M,1,1,data);//将点动模式运行置true
-    if(data==true)
-    {
-        vellist.prepend(0);
-        QTimer *timer_Vel = new QTimer;
-        connect(timer_Vel,&QTimer::timeout,[=](){
-
-            i_TestVel++;
-            qDebug() << i_TestVel;
-            double vel;
-            Read_Double(XNet_D,20048,4,&vel);
-            if(qAbs(vel-map_write["d_Vel"])<10)
-            {
-                timer_Vel->stop();
-                qDebug() << vel <<"=" <<map_write["d_Vel"];
-                vellist.prepend(i_TestVel);
-                i_TestVel=0;
-            }
-        });
-        timer_Vel->start(100);
-    }
-    else
-    {
-        vellist2.prepend(0);
-        QTimer *timer_Vel = new QTimer;
-        connect(timer_Vel,&QTimer::timeout,[=](){
-
-            i_TestVel++;
-            qDebug() << i_TestVel;
-            double vel;
-            Read_Double(XNet_D,20048,4,&vel);
-            if(qAbs(vel)<10)
-            {
-                timer_Vel->stop();
-                qDebug() << "vel=" <<0;
-                vellist2.prepend(i_TestVel);
-                i_TestVel=0;
-            }
-        });
-        timer_Vel->start(100);
-    }
     Write_Bool(XNet_M,3,1,!data);
     Read_Int(XNet_D,50,2,&err50);
     return err50;
