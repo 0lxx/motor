@@ -59,13 +59,13 @@ private slots:
 
     void on_j_Dec_textEdited(const QString &arg1);
 
-    //void on_set_Widget_currentChanged(int index);
-
-    void on_set_Widget_tabBarClicked(int index);
+    //void on_set_Widget_tabBarClicked(int index);
 
     void on_stopButton_pressed();
 
     void on_stopButton_released();
+
+
 
 private:
     Ui::form *ui;

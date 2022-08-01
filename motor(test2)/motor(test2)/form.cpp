@@ -50,7 +50,8 @@ int err100;
 int err150;
 QList<int> vellist;
 QList<int> vellist2;
-QMap<QString,int> map_write;
+
+QMap<QString,double> map_write;
 
 
 //建立通信
@@ -204,6 +205,7 @@ bool form::on_set_XNet_triggered()
         map_write.insert("j_Dec",j_Dec);
         map_write.insert("j_Move",j_Move);
 
+
     });
     timer_Enter->start(1000);
 
@@ -246,6 +248,7 @@ void form::on_dian_start_pressed()
 
 
     vellist.prepend(0);
+    //double x =(map_write["d_Vel"]/map_write["d_Acc"])*10;
     QTimer *timer_Vel = new QTimer;
     connect(timer_Vel,&QTimer::timeout,[=](){
 
@@ -253,7 +256,7 @@ void form::on_dian_start_pressed()
         qDebug() << i_TestVel;
         double vel;
         Read_Double(XNet_D,20048,4,&vel);
-        if(qAbs(vel-map_write["d_Vel"])<10)
+        if(vel >= map_write["d_Vel"])
         {
             timer_Vel->stop();
             qDebug() << vel <<"=" <<map_write["d_Vel"];
@@ -262,6 +265,23 @@ void form::on_dian_start_pressed()
         }
     });
     timer_Vel->start(100);
+//    vellist.prepend(0);
+//    QTimer *timer_Vel = new QTimer;
+//    connect(timer_Vel,&QTimer::timeout,[=](){
+//        i_TestVel++;
+//        double vel;
+//        Read_Double(XNet_D,20048,4,&vel);
+//        vellist.prepend(vel);
+//        //qDebug() << vel;
+//        if(qAbs(vel-map_write["d_Vel"])<200)
+//        {
+//            timer_Vel->stop();
+//            qDebug() << vel <<"=" <<map_write["d_Vel"];
+//            i_TestVel=0;
+//        }
+//    });
+//    timer_Vel->start(100);
+
     Write_Bool(XNet_M,3,1,false);
 }
 
@@ -279,24 +299,38 @@ void form::on_dian_start_released()
 {
     Write_Bool(XNet_M,3,1,true);
     Write_Bool(XNet_M,1,1,false);
+//    vellist2.prepend(0);
+//    QTimer *timer_Vel = new QTimer;
+//    connect(timer_Vel,&QTimer::timeout,[=](){
+
+//        i_TestVel++;
+//        qDebug() << i_TestVel;
+//        double vel;
+//        Read_Double(XNet_D,20048,4,&vel);
+//        if(qAbs(vel)<10)
+//        {
+//            timer_Vel->stop();
+//            qDebug() << "vel=" <<0;
+//            vellist2.prepend(i_TestVel);
+//            i_TestVel=0;
+//        }
+//    });
+//    timer_Vel->start(100);
     vellist2.prepend(0);
     QTimer *timer_Vel = new QTimer;
     connect(timer_Vel,&QTimer::timeout,[=](){
 
-        i_TestVel++;
-        qDebug() << i_TestVel;
         double vel;
         Read_Double(XNet_D,20048,4,&vel);
-        if(qAbs(vel)<10)
+        vellist2.prepend(vel);
+        //qDebug() << vel;
+        if(vel<=300)
         {
             timer_Vel->stop();
-            qDebug() << "vel=" <<0;
-            vellist2.prepend(i_TestVel);
-            i_TestVel=0;
+            qDebug() << vel <<"=" <<0;
         }
     });
-    timer_Vel->start(100);
-
+    timer_Vel->start(1);
 
 }
 

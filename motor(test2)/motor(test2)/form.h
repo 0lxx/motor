@@ -94,8 +94,10 @@ extern int err50;
 extern int err100;
 extern int err150;
 extern double d_Vel;
-extern QMap<QString,int> map_write;
+extern QMap<QString,double> map_write;
 extern int state;
 extern QList<int> vellist;
 extern QList<int> vellist2;
+extern QList<int> vellist3;
+extern QList<int> vellist4;
 #endif // FORM_H

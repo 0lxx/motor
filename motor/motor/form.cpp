@@ -14,6 +14,7 @@
 QList<int> model;
 int i=1;
 double d_Vel;
+int nn;
 
 form::form(QWidget *parent) :
     QMainWindow(parent),
@@ -33,7 +34,6 @@ form::form(QWidget *parent) :
     ui->j_Acc->setValidator(new QRegExpValidator(QRegExp("^-?[0-9.0-9]*")));
     ui->j_Dec->setValidator(new QRegExpValidator(QRegExp("^-?[0-9.0-9]*")));
     ui->j_Move->setValidator(new QRegExpValidator(QRegExp("^-?[0-9.0-9]*")));//绝对运动
-
 }
 
 form::~form()
@@ -222,7 +222,7 @@ void form::on_x_start_clicked()
 
 
     Write_Bool(XNet_M,10,1,true);    
-
+    ui->set_Widget->setEnabled(false);
     QTimer *timer_xDialog = new QTimer;
     connect(timer_xDialog,&QTimer::timeout,[=](){
         bool m130;
@@ -237,6 +237,7 @@ void form::on_x_start_clicked()
             int ret1 = x_Continue.exec();
             switch(ret1){
             case QMessageBox::Yes :
+                ui->set_Widget->setEnabled(true);
                 Write_Bool(XNet_M,10,1,false);
                 timer_xDialog->stop();
                 break;
@@ -257,7 +258,7 @@ void form::on_j_start_clicked()
 
 
     Write_Bool(XNet_M,20,1,true);
-
+    ui->set_Widget->setEnabled(false);
 
     QTimer *timer_jDialog = new QTimer;
     connect(timer_jDialog,&QTimer::timeout,[=](){
@@ -275,6 +276,7 @@ void form::on_j_start_clicked()
             int ret2 = j_Continue.exec();
             switch(ret2){
             case QMessageBox::Yes :
+                ui->set_Widget->setEnabled(true);
                 Write_Bool(XNet_M,20,1,false);//Yes重新开始运行
                 Write_Bool(XNet_M,104,1,false);
                 timer_jDialog->stop();
@@ -448,40 +450,35 @@ void form::on_j_Dec_textEdited(const QString &arg1)//减速度
     }
 }
 //切换模式
-void form::on_set_Widget_tabBarClicked(int index)
-{
-    int nn;
-    nn=ui->set_Widget->currentIndex();
-    qDebug() << nn;
-//    model<<0;
-//    model.prepend(index);
-//    QString str =QString("Model[%1]=%2").arg(QString::number(i)).arg(QString::number(index));
-//    qDebug() << str;
-    int state_Model;
-    Read_Int(XNet_D,20000,2,&state_Model);
-    if(state_Model==2||state_Model==3||state_Model==4||state_Model==5||state_Model==6)
-    {
+//void form::on_set_Widget_tabBarClicked(int index)
+//{
+
+//    nn=ui->set_Widget->currentIndex();
+//    qDebug() << nn;
+////    model<<0;
+////    model.prepend(index);
+////    QString str =QString("Model[%1]=%2").arg(QString::number(i)).arg(QString::number(index));
+////    qDebug() << str;
+//    int state_Model;
+//    Read_Int(XNet_D,20000,2,&state_Model);
+//    if(state_Model==2||state_Model==3||state_Model==4||state_Model==5||state_Model==6)
+//    {
 
 //        QMessageBox qie;
 //        qie.setText("正在运行中，请勿切换模式");
-//        qie.setStandardButtons(QMessageBox::Ok);
-//        qie.exec();
+//        qie.setStandardButtons(QMessageBox::Ok|QMessageBox::Cancel);
+//        qie.setDefaultButton(QMessageBox::Ok);
+//        int ret2 = qie.exec();
+//        switch(ret2){
+//        case QMessageBox::Ok :
+//            //ui->set_Widget->setEnabled(false);
+//            break;
+//        case QMessageBox::Cancel :
+//            break;
+//        }
+//    }
+//}
 
-        if(QMessageBox::Ok == QMessageBox::warning(this,"警告","正在运行中，请勿运行其他模式"),QMessageBox::Ok)
-        {
-            ui->set_Widget->setCurrentIndex(nn);
-
-        }
-
-    }
-
-//    qDebug()<<"0="<<model.at(0);
-//   qDebug()<<"1="<<model.at(1);
-
-//    i=i+1;
-
-
-}
 
 //按“×”退出
 void form::closeEvent(QCloseEvent *e)
@@ -504,5 +501,4 @@ void form::closeEvent(QCloseEvent *e)
     Write_Int(XNet_D,10,2,0);
     Write_Bool(XNet_M,100,1,false);
 }
-
 
